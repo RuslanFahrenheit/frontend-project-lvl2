@@ -42,18 +42,18 @@ const renderDiff = (diff) => (
       const tab = '  ';
 
       if (type === 'changed') {
-        return `${acc} \n${tab}- ${key}: ${removedValue} \n${tab}+ ${key}: ${value}`;
+        return `${acc}\n${tab}- ${key}: ${removedValue}\n${tab}+ ${key}: ${value}`;
       }
 
       if (type === 'added') {
-        return `${acc} \n${tab}+ ${key}: ${value}`;
+        return `${acc}\n${tab}+ ${key}: ${value}`;
       }
 
       if (type === 'removed') {
-        return `${acc} \n${tab}- ${key}: ${value}`;
+        return `${acc}\n${tab}- ${key}: ${value}`;
       }
 
-      return `${acc} \n${tab}${tab}${key}: ${value}`;
+      return `${acc}\n${tab}${tab}${key}: ${value}`;
     }, '')
 );
 
@@ -62,7 +62,7 @@ const genDiff = (filepath1, filepath2) => {
   const file2 = JSON.parse(fs.readFileSync(filepath2));
   const diff = getDiff(file1, file2);
 
-  return renderDiff(diff);
+  return `{${renderDiff(diff)}\n}`;
 };
 
 export default genDiff;
