@@ -1,7 +1,7 @@
 import commander from 'commander';
-import genDiff from './index';
+import { genDiff } from './index';
 
-const program = () => {
+export const program = () => {
   commander
     .version('1.0.0')
     .description('Compares two configuration files and shows a difference.')
@@ -13,5 +13,3 @@ const program = () => {
     })
     .parse(process.argv);
 };
-
-export default program;

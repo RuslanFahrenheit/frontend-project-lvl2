@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { union, sortBy, has } from 'lodash';
+import { NODE_TYPES } from './nodeTypes';
 
 const getDiff = (first, second) => {
   const all = union(Object.keys(first), Object.keys(second));
@@ -9,23 +10,23 @@ const getDiff = (first, second) => {
     const valueOfSecond = second[key];
 
     if (!has(second, key)) {
-      return { type: 'removed', key, value: valueOfFirst };
+      return { type: NODE_TYPES.removed, key, value: valueOfFirst };
     }
 
     if (!has(first, key) && has(second, key)) {
-      return { type: 'added', key, value: valueOfSecond };
+      return { type: NODE_TYPES.added, key, value: valueOfSecond };
     }
 
     if (has(second, key) && has(first, key) && valueOfSecond !== valueOfFirst) {
       return {
-        type: 'changed',
+        type: NODE_TYPES.changed,
         key,
         removedValue: valueOfFirst,
         value: valueOfSecond,
       };
     }
 
-    return { type: 'same', key, value: valueOfFirst };
+    return { type: NODE_TYPES.same, key, value: valueOfFirst };
   };
 
   return all.map(buildDiff);
@@ -41,15 +42,15 @@ const renderDiff = (diff) => (
     }) => {
       const tab = '  ';
 
-      if (type === 'changed') {
+      if (type === NODE_TYPES.changed) {
         return `${acc}\n${tab}- ${key}: ${removedValue}\n${tab}+ ${key}: ${value}`;
       }
 
-      if (type === 'added') {
+      if (type === NODE_TYPES.added) {
         return `${acc}\n${tab}+ ${key}: ${value}`;
       }
 
-      if (type === 'removed') {
+      if (type === NODE_TYPES.removed) {
         return `${acc}\n${tab}- ${key}: ${value}`;
       }
 
@@ -57,12 +58,10 @@ const renderDiff = (diff) => (
     }, '')
 );
 
-const genDiff = (filepath1, filepath2) => {
+export const genDiff = (filepath1, filepath2) => {
   const file1 = JSON.parse(fs.readFileSync(filepath1));
   const file2 = JSON.parse(fs.readFileSync(filepath2));
   const diff = getDiff(file1, file2);
 
   return `{${renderDiff(diff)}\n}`;
 };
-
-export default genDiff;
