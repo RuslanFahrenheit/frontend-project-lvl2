@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { union, sortBy, has } from 'lodash';
+import { union, sortBy, has, flatten } from 'lodash';
 import { NODE_TYPES } from './nodeTypes';
 
 const getDiff = (first, second) => {
@@ -10,7 +10,7 @@ const getDiff = (first, second) => {
     const valueOfSecond = second[key];
 
     if (!has(second, key)) {
-      return { type: NODE_TYPES.removed, key, value: valueOfFirst };
+      return { type: NODE_TYPES.removed, key, removedValue: valueOfFirst, value: valueOfSecond };
     }
 
     if (!has(first, key) && has(second, key)) {
@@ -32,31 +32,27 @@ const getDiff = (first, second) => {
   return all.map(buildDiff);
 };
 
-const renderDiff = (diff) => (
-  sortBy(diff, ['key'])
-    .reduce((acc, {
-      type,
-      key,
-      value,
-      removedValue,
-    }) => {
-      const tab = '  ';
+const renderDiff = (diff) => {
+  const func = ({
+    key,
+    removedValue,
+    type,
+    value,
+  }) => {
+    const tab = '  ';
 
-      if (type === NODE_TYPES.changed) {
-        return `${acc}\n${tab}- ${key}: ${removedValue}\n${tab}+ ${key}: ${value}`;
-      }
+    const mapping = {
+      added: () => `\n${tab}+ ${key}: ${value}`,
+      changed: () => [mapping.removed(), mapping.added()],
+      removed: () => `\n${tab}- ${key}: ${removedValue}`,
+      same: () => `\n${tab}${tab}${key}: ${value}`,
+    };
 
-      if (type === NODE_TYPES.added) {
-        return `${acc}\n${tab}+ ${key}: ${value}`;
-      }
+    return mapping[type]();
+  };
 
-      if (type === NODE_TYPES.removed) {
-        return `${acc}\n${tab}- ${key}: ${value}`;
-      }
-
-      return `${acc}\n${tab}${tab}${key}: ${value}`;
-    }, '')
-);
+  return flatten(sortBy(diff, ['key']).map(func)).join('');
+};
 
 export const genDiff = (filepath1, filepath2) => {
   const file1 = JSON.parse(fs.readFileSync(filepath1));
