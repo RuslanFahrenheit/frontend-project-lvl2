@@ -1,5 +1,10 @@
 import fs from 'fs';
-import { union, sortBy, has, flatten } from 'lodash';
+import {
+  union,
+  sortBy,
+  has,
+  flatten,
+} from 'lodash';
 import { NODE_TYPES } from './nodeTypes';
 
 const getDiff = (first, second) => {
@@ -10,7 +15,12 @@ const getDiff = (first, second) => {
     const valueOfSecond = second[key];
 
     if (!has(second, key)) {
-      return { type: NODE_TYPES.removed, key, removedValue: valueOfFirst, value: valueOfSecond };
+      return {
+        type: NODE_TYPES.removed,
+        key,
+        removedValue: valueOfFirst,
+        value: valueOfSecond,
+      };
     }
 
     if (!has(first, key) && has(second, key)) {
