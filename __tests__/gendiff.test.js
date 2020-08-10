@@ -12,3 +12,11 @@ test('compare plain JSONs', () => {
 
   expect(genDiff(before, after)).toEqual(result);
 });
+
+test('compare plain YMLs', () => {
+  const before = getFixturePath('before.yml');
+  const after = getFixturePath('after.yml');
+  const result = readFile('result-json.txt');
+
+  expect(genDiff(before, after)).toEqual(result);
+});

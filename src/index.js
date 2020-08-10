@@ -5,7 +5,9 @@ import {
   has,
   flatten,
 } from 'lodash';
-import { NODE_TYPES } from './nodeTypes';
+import { NODE_TYPES } from './constants/nodeTypes';
+import { parse } from './parsers';
+import { getFormat } from './utils';
 
 const getDiff = (first, second) => {
   const all = union(Object.keys(first), Object.keys(second));
@@ -65,8 +67,10 @@ const renderDiff = (diff) => {
 };
 
 export const genDiff = (filepath1, filepath2) => {
-  const file1 = JSON.parse(fs.readFileSync(filepath1));
-  const file2 = JSON.parse(fs.readFileSync(filepath2));
+  const format1 = getFormat(filepath1);
+  const format2 = getFormat(filepath2);
+  const file1 = parse(fs.readFileSync(filepath1), format1);
+  const file2 = parse(fs.readFileSync(filepath2), format2);
   const diff = getDiff(file1, file2);
 
   return `{${renderDiff(diff)}\n}`;
