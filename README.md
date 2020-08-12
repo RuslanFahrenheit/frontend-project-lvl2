@@ -8,3 +8,6 @@
 
 ## Plain YML files
 [![asciicast](https://asciinema.org/a/ox6gTiWblQnhYjlb9ePKSty5b.svg)](https://asciinema.org/a/ox6gTiWblQnhYjlb9ePKSty5b)
+
+## Plain INI files
+[![asciicast](https://asciinema.org/a/hu74CKH4npYAMdGrjvDxdndQu.svg)](https://asciinema.org/a/hu74CKH4npYAMdGrjvDxdndQu)
