@@ -69,8 +69,8 @@ const renderDiff = (diff) => {
 export const genDiff = (filepath1, filepath2) => {
   const format1 = getFormat(filepath1);
   const format2 = getFormat(filepath2);
-  const file1 = parse(fs.readFileSync(filepath1), format1);
-  const file2 = parse(fs.readFileSync(filepath2), format2);
+  const file1 = parse(fs.readFileSync(filepath1, 'utf-8'), format1);
+  const file2 = parse(fs.readFileSync(filepath2, 'utf-8'), format2);
   const diff = getDiff(file1, file2);
 
   return `{${renderDiff(diff)}\n}`;
