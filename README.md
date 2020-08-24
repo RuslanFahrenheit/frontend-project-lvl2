@@ -11,3 +11,6 @@
 
 ## Plain INI files
 [![asciicast](https://asciinema.org/a/hu74CKH4npYAMdGrjvDxdndQu.svg)](https://asciinema.org/a/hu74CKH4npYAMdGrjvDxdndQu)
+
+## Nested files
+[![asciicast](https://asciinema.org/a/IwbPqWbt1IIEeb58XIzlWCnTI.svg)](https://asciinema.org/a/IwbPqWbt1IIEeb58XIzlWCnTI)
