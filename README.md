@@ -14,3 +14,6 @@
 
 ## Nested files
 [![asciicast](https://asciinema.org/a/IwbPqWbt1IIEeb58XIzlWCnTI.svg)](https://asciinema.org/a/IwbPqWbt1IIEeb58XIzlWCnTI)
+
+## Displaying difference in plain text format
+[![asciicast](https://asciinema.org/a/MciSEWEf2nXdOhfX7VCtwR3Zg.svg)](https://asciinema.org/a/MciSEWEf2nXdOhfX7VCtwR3Zg)
