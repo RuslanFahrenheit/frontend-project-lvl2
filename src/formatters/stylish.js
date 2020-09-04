@@ -25,7 +25,7 @@ const buildDiffItem = (item, depth = 0) => {
   return iter(item, depth);
 };
 
-export const renderStylishDiff = (diff, depth = 1) => {
+const renderDiff = (diff, depth = 1) => {
   const func = ({
     key,
     removedValue,
@@ -38,7 +38,7 @@ export const renderStylishDiff = (diff, depth = 1) => {
     const mapping = {
       added: () => `\n${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
       changed: () => [mapping.removed(), mapping.added()],
-      nested: () => `\n${indent}${key}: {${renderStylishDiff(value, depth + 1)}\n${indent}}`,
+      nested: () => `\n${indent}${key}: {${renderDiff(value, depth + 1)}\n${indent}}`,
       removed: () => `\n${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
       same: () => `\n${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
     };
@@ -48,3 +48,5 @@ export const renderStylishDiff = (diff, depth = 1) => {
 
   return sortBy(diff, ['key']).flatMap(func).join('');
 };
+
+export const renderStylishDiff = (diff) => `{${renderDiff(diff)}\n}`;
