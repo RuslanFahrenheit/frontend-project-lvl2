@@ -57,5 +57,5 @@ export const genDiff = (filepath1, filepath2, format) => {
   const file2 = parse(fs.readFileSync(filepath2, 'utf-8'), format2);
   const diff = createAst(file1, file2);
 
-  return `{${render(diff, format)}\n}`;
+  return render(diff, format);
 };
