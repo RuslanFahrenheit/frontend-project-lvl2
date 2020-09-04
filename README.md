@@ -17,3 +17,6 @@
 
 ## Displaying difference in plain text format
 [![asciicast](https://asciinema.org/a/MciSEWEf2nXdOhfX7VCtwR3Zg.svg)](https://asciinema.org/a/MciSEWEf2nXdOhfX7VCtwR3Zg)
+
+## Displaying difference in json format
+[![asciicast](https://asciinema.org/a/RaKiWpNMATyLTB8UPyo4rtbNC.svg)](https://asciinema.org/a/RaKiWpNMATyLTB8UPyo4rtbNC)
