@@ -1,7 +1,13 @@
 import { sortBy } from 'lodash';
 
 const getPath = (acc, key) => [acc, key].filter((item) => item !== '').join('.');
-const convert = (value) => ((value instanceof Object) ? '[complex value]' : value);
+const convert = (value) => {
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+
+  return (value instanceof Object) ? '[complex value]' : value;
+};
 
 export const renderPlainDiff = (diff, path = '') => {
   const func = ({
@@ -13,10 +19,10 @@ export const renderPlainDiff = (diff, path = '') => {
     const diffPath = getPath(path, key);
 
     const mapping = {
-      added: () => `Property ${diffPath} was added with value: ${convert(value)}`,
-      changed: () => `Property ${diffPath} was updated. From ${convert(removedValue)} to ${convert(value)}`,
+      added: () => `Property '${diffPath}' was added with value: ${convert(value)}`,
+      changed: () => `Property '${diffPath}' was updated. From ${convert(removedValue)} to ${convert(value)}`,
       nested: () => renderPlainDiff(value, diffPath),
-      removed: () => `Property ${diffPath} was removed`,
+      removed: () => `Property '${diffPath}' was removed`,
       same: () => '',
     };
 
