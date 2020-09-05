@@ -1,11 +1,13 @@
-import fs from 'fs';
 import {
   union,
   has,
 } from 'lodash';
 import { NODE_TYPES } from './constants/nodeTypes';
 import { parse } from './parsers';
-import { getFormat } from './utils';
+import {
+  getFormat,
+  readFile,
+} from './utils';
 import { render } from './formatters';
 
 const createAst = (first, second) => {
@@ -52,10 +54,14 @@ const createAst = (first, second) => {
 
 export const genDiff = (filepath1, filepath2, format) => {
   const format1 = getFormat(filepath1);
+  const file1 = readFile(filepath1);
+  const data1 = parse(file1, format1);
+
   const format2 = getFormat(filepath2);
-  const file1 = parse(fs.readFileSync(filepath1, 'utf-8'), format1);
-  const file2 = parse(fs.readFileSync(filepath2, 'utf-8'), format2);
-  const diff = createAst(file1, file2);
+  const file2 = readFile(filepath2);
+  const data2 = parse(file2, format2);
+
+  const diff = createAst(data1, data2);
 
   return render(diff, format);
 };
