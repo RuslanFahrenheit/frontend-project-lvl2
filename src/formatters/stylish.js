@@ -1,4 +1,5 @@
 import { sortBy } from 'lodash';
+import { NODE_TYPES } from '../constants/nodeTypes';
 
 const tab = ' ';
 const tabSize = 4;
@@ -36,11 +37,11 @@ const renderDiff = (diff, depth = 1) => {
     const halfIndent = tab.repeat(tabSize * depth - tabSize / 2);
 
     const mapping = {
-      added: () => `\n${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
-      changed: () => [mapping.removed(), mapping.added()],
-      nested: () => `\n${indent}${key}: {${renderDiff(value, depth + 1)}\n${indent}}`,
-      removed: () => `\n${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
-      same: () => `\n${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
+      [NODE_TYPES.added]: () => `\n${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
+      [NODE_TYPES.changed]: () => [mapping.removed(), mapping.added()],
+      [NODE_TYPES.nested]: () => `\n${indent}${key}: {${renderDiff(value, depth + 1)}\n${indent}}`,
+      [NODE_TYPES.removed]: () => `\n${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
+      [NODE_TYPES.same]: () => `\n${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
     };
 
     return mapping[type]();

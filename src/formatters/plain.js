@@ -1,4 +1,5 @@
 import { sortBy } from 'lodash';
+import { NODE_TYPES } from '../constants/nodeTypes';
 
 const getPath = (acc, key) => [acc, key].filter((item) => item !== '').join('.');
 const convert = (value) => {
@@ -19,11 +20,11 @@ export const renderPlainDiff = (diff, path = '') => {
     const diffPath = getPath(path, key);
 
     const mapping = {
-      added: () => `Property '${diffPath}' was added with value: ${convert(value)}`,
-      changed: () => `Property '${diffPath}' was updated. From ${convert(removedValue)} to ${convert(value)}`,
-      nested: () => renderPlainDiff(value, diffPath),
-      removed: () => `Property '${diffPath}' was removed`,
-      same: () => '',
+      [NODE_TYPES.added]: () => `Property '${diffPath}' was added with value: ${convert(value)}`,
+      [NODE_TYPES.changed]: () => `Property '${diffPath}' was updated. From ${convert(removedValue)} to ${convert(value)}`,
+      [NODE_TYPES.nested]: () => renderPlainDiff(value, diffPath),
+      [NODE_TYPES.removed]: () => `Property '${diffPath}' was removed`,
+      [NODE_TYPES.same]: () => '',
     };
 
     return mapping[type]();
