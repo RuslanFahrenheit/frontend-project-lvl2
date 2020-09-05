@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { EXTENSION_TYPES } from './constants/extensionTypes';
 
 export const checkExtensionIsKnown = (extension) => (
@@ -19,3 +20,5 @@ export const getFormat = (filepath) => {
     ${Object.keys(EXTENSION_TYPES).join(', ')}.`,
   );
 };
+
+export const readFile = (filepath) => fs.readFileSync(filepath, 'utf-8');
