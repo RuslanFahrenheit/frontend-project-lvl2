@@ -1,6 +1,6 @@
-import { renderStylishDiff } from './stylish';
-import { renderPlainDiff } from './plain';
-import { renderJsonDiff } from './json';
+import { renderStylishDiff } from './stylish.js';
+import { renderPlainDiff } from './plain.js';
+import { renderJsonDiff } from './json.js';
 
 const formatters = {
   stylish: renderStylishDiff,

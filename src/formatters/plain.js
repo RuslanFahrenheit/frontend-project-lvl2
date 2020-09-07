@@ -1,5 +1,5 @@
-import { sortBy } from 'lodash';
-import { NODE_TYPES } from '../constants/nodeTypes';
+import _ from 'lodash';
+import { NODE_TYPES } from '../constants/nodeTypes.js';
 
 const getPath = (acc, key) => [acc, key].filter((item) => item !== '').join('.');
 const convert = (value) => {
@@ -30,5 +30,5 @@ export const renderPlainDiff = (diff, path = '') => {
     return mapping[type]();
   };
 
-  return sortBy(diff, ['key']).flatMap(func).filter((item) => item !== '').join('\n');
+  return _.sortBy(diff, ['key']).flatMap(func).filter((item) => item !== '').join('\n');
 };

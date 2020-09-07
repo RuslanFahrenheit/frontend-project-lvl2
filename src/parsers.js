@@ -1,6 +1,6 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
-import { EXTENSION_TYPES } from './constants/extensionTypes';
+import { EXTENSION_TYPES } from './constants/extensionTypes.js';
 
 const parsers = {
   [EXTENSION_TYPES.json]: JSON.parse,

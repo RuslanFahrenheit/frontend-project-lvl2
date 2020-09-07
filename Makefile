@@ -1,9 +1,7 @@
-install:
-	npm install
+install: install-deps
 
-build:
-	rm -rf dist
-	npm run build
+install-deps:
+	npm ci
 
 test-coverage:
 	npm test -- --coverage --coverageProvider=v8
@@ -18,4 +16,4 @@ publish:
 	npm publish --dry-run
 
 run:
-	npx babel-node src/bin/gendiff.js
+	bin/gendiff.js

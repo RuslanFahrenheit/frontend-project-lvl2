@@ -1,5 +1,5 @@
-import { sortBy } from 'lodash';
-import { NODE_TYPES } from '../constants/nodeTypes';
+import _ from 'lodash';
+import { NODE_TYPES } from '../constants/nodeTypes.js';
 
 const tab = ' ';
 const tabSize = 4;
@@ -47,7 +47,7 @@ const renderDiff = (diff, depth = 1) => {
     return mapping[type]();
   };
 
-  return sortBy(diff, ['key']).flatMap(func).join('');
+  return _.sortBy(diff, ['key']).flatMap(func).join('');
 };
 
 export const renderStylishDiff = (diff) => `{${renderDiff(diff)}\n}`;
