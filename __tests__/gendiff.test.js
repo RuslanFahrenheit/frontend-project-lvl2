@@ -3,10 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { genDiff } from '../src/genDiff';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const getFixturePath = (fileName) => path.join(__dirname, '..', '__fixtures__', fileName);
+const getFixturePath = (fileName) => path.join(dirname, '..', '__fixtures__', fileName);
 const readFile = (fileName) => fs.readFileSync(getFixturePath(fileName), 'utf-8');
 const getResult = (format) => readFile(`result-${format}.txt`);
 
