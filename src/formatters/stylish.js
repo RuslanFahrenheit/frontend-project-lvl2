@@ -7,7 +7,7 @@ const makeIndent = (depth) => tab.repeat(depth);
 
 const buildDiffItem = (item, depth = 0) => {
   const iter = (node, currentDepth) => {
-    if (!(node instanceof Object)) {
+    if (!(_.isPlainObject(node))) {
       return node;
     }
 
@@ -32,6 +32,7 @@ const renderDiff = (diff, depth = 1) => {
     removedValue,
     type,
     value,
+    children,
   }) => {
     const indent = makeIndent(tabSize * depth);
     const halfIndent = tab.repeat(tabSize * depth - tabSize / 2);
@@ -39,9 +40,9 @@ const renderDiff = (diff, depth = 1) => {
     const mapping = {
       [NODE_TYPES.added]: () => `\n${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
       [NODE_TYPES.changed]: () => [mapping.removed(), mapping.added()],
-      [NODE_TYPES.nested]: () => `\n${indent}${key}: {${renderDiff(value, depth + 1)}\n${indent}}`,
+      [NODE_TYPES.nested]: () => `\n${indent}${key}: {${renderDiff(children, depth + 1)}\n${indent}}`,
       [NODE_TYPES.removed]: () => `\n${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
-      [NODE_TYPES.same]: () => `\n${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
+      [NODE_TYPES.notChanged]: () => `\n${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
     };
 
     return mapping[type]();

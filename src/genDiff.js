@@ -16,6 +16,8 @@ export const genDiff = (filepath1, filepath2, format) => {
   const file2 = readFile(filepath2);
 
   const diff = createAst(file1, file2);
+  console.log(file1);
+
 
   return render(diff, format);
 };
