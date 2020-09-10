@@ -7,7 +7,7 @@ const makeIndent = (depth) => tab.repeat(depth);
 
 const buildDiffItem = (item, depth = 0) => {
   const iter = (node, currentDepth) => {
-    if (!(_.isPlainObject(node))) {
+    if (!_.isPlainObject(node)) {
       return node;
     }
 
