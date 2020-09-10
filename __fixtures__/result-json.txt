@@ -2,9 +2,9 @@
   {
     "type": "nested",
     "key": "common",
-    "value": [
+    "children": [
       {
-        "type": "same",
+        "type": "notChanged",
         "key": "setting1",
         "value": "Value 1"
       },
@@ -24,16 +24,16 @@
       {
         "type": "nested",
         "key": "setting6",
-        "value": [
+        "children": [
           {
-            "type": "same",
+            "type": "notChanged",
             "key": "key",
             "value": "value"
           },
           {
             "type": "nested",
             "key": "doge",
-            "value": [
+            "children": [
               {
                 "type": "changed",
                 "key": "wow",
@@ -71,7 +71,7 @@
   {
     "type": "nested",
     "key": "group1",
-    "value": [
+    "children": [
       {
         "type": "changed",
         "key": "baz",
@@ -79,7 +79,7 @@
         "value": "bars"
       },
       {
-        "type": "same",
+        "type": "notChanged",
         "key": "foo",
         "value": "bar"
       },

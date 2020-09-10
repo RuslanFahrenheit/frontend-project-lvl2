@@ -1,1 +1,1 @@
-export const renderJsonDiff = (diff) => JSON.stringify(diff, null, 2);
+export const renderJsonDiff = JSON.stringify;
