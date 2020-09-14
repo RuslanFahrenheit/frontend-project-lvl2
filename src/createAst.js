@@ -2,7 +2,8 @@ import _ from 'lodash';
 import { NODE_TYPES } from './constants/nodeTypes.js';
 
 export const createAst = (first, second) => {
-  const keys = _.union(Object.keys(first), Object.keys(second));
+  const keys = _.union(Object.keys(first), Object.keys(second)).sort();
+  // console.log(keys);
 
   return keys.map((key) => {
     const value1 = first[key];

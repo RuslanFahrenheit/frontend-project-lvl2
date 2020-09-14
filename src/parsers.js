@@ -7,17 +7,17 @@ import { EXTENSION_TYPES } from './constants/extensionTypes.js';
  * TODO: remove fixNumbersParse function
  * when the issue https://github.com/npm/ini/issues/75 is fixed
  */
-const fixNumbersParse = (data) => Object.entries(data).reduce((acc, [key, value]) => {
+const fixNumbersParse = (data) => _.mapValues(data, (value) => {
   if (_.isPlainObject(value)) {
-    return { ...acc, [key]: fixNumbersParse(value) };
+    return fixNumbersParse(value);
   }
 
   if (!Number.isNaN(Number(value)) && !_.isBoolean(value)) {
-    return { ...acc, [key]: Number(value) };
+    return Number(value);
   }
 
-  return { ...acc, [key]: value };
-}, {});
+  return value;
+});
 
 export const parse = (data, format) => {
   switch (format) {
