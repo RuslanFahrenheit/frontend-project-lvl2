@@ -27,28 +27,22 @@ const buildDiffItem = (item, depth = 0) => {
 };
 
 const renderDiff = (diff, depth = 1) => {
-  const func = ({
-    key,
-    removedValue,
-    type,
-    value,
-    children,
-  }) => {
-    const indent = makeIndent(tabSize * depth);
-    const halfIndent = tab.repeat(tabSize * depth - tabSize / 2);
+  const indent = makeIndent(tabSize * depth);
+  const halfIndent = tab.repeat(tabSize * depth - tabSize / 2);
 
-    const mapping = {
-      [NODE_TYPES.added]: () => `\n${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
-      [NODE_TYPES.changed]: () => [mapping.removed(), mapping.added()],
-      [NODE_TYPES.nested]: () => `\n${indent}${key}: {${renderDiff(children, depth + 1)}\n${indent}}`,
-      [NODE_TYPES.removed]: () => `\n${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
-      [NODE_TYPES.notChanged]: () => `\n${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
-    };
-
-    return mapping[type]();
+  const mapping = {
+    [NODE_TYPES.added]: ({ key, value }) => `${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
+    [NODE_TYPES.changed]: (data) => (
+      [mapping[NODE_TYPES.removed](data), mapping[NODE_TYPES.added](data)]
+    ),
+    [NODE_TYPES.nested]: ({ key, children }) => `${indent}${key}: {\n${renderDiff(children, depth + 1)}\n${indent}}`,
+    [NODE_TYPES.removed]: ({ key, removedValue }) => `${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
+    [NODE_TYPES.notChanged]: ({ key, value }) => `${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
   };
 
-  return _.sortBy(diff, ['key']).flatMap(func).join('');
+  return _.sortBy(diff, ['key'])
+    .flatMap(({ type, ...data }) => mapping[type](data))
+    .join('\n');
 };
 
-export const renderStylishDiff = (diff) => `{${renderDiff(diff)}\n}`;
+export const renderStylishDiff = (diff) => `{\n${renderDiff(diff)}\n}`;
