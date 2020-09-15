@@ -11,25 +11,16 @@ const convert = (value) => {
 };
 
 export const renderPlainDiff = (diff, path = '') => {
-  const func = ({
-    key,
-    removedValue,
-    type,
-    value,
-    children,
-  }) => {
-    const diffPath = getPath(path, key);
-
-    const mapping = {
-      [NODE_TYPES.added]: () => `Property '${diffPath}' was added with value: ${convert(value)}`,
-      [NODE_TYPES.changed]: () => `Property '${diffPath}' was updated. From ${convert(removedValue)} to ${convert(value)}`,
-      [NODE_TYPES.nested]: () => renderPlainDiff(children, diffPath),
-      [NODE_TYPES.removed]: () => `Property '${diffPath}' was removed`,
-      [NODE_TYPES.notChanged]: () => '',
-    };
-
-    return mapping[type]();
+  const mapping = {
+    [NODE_TYPES.added]: ({ key, value }) => `Property '${getPath(path, key)}' was added with value: ${convert(value)}`,
+    [NODE_TYPES.changed]: ({ key, value, removedValue }) => `Property '${getPath(path, key)}' was updated. From ${convert(removedValue)} to ${convert(value)}`,
+    [NODE_TYPES.nested]: ({ key, children }) => renderPlainDiff(children, getPath(path, key)),
+    [NODE_TYPES.removed]: ({ key }) => `Property '${getPath(path, key)}' was removed`,
+    [NODE_TYPES.notChanged]: () => '',
   };
 
-  return _.sortBy(diff, ['key']).flatMap(func).filter((item) => item !== '').join('\n');
+  return _.sortBy(diff, ['key'])
+    .flatMap(({ type, ...data }) => mapping[type](data))
+    .filter((item) => item !== '')
+    .join('\n');
 };

@@ -2,9 +2,10 @@ import _ from 'lodash';
 import { NODE_TYPES } from './constants/nodeTypes.js';
 
 export const createAst = (first, second) => {
-  const keys = _.union(Object.keys(first), Object.keys(second));
+  const keys = _.union(Object.keys(first), Object.keys(second)).sort();
+  // console.log(keys);
 
-  const func = (key) => {
+  return keys.map((key) => {
     const value1 = first[key];
     const value2 = second[key];
 
@@ -16,7 +17,7 @@ export const createAst = (first, second) => {
       };
     }
 
-    if (!_.has(first, key) && _.has(second, key)) {
+    if (!_.has(first, key)) {
       return { type: NODE_TYPES.added, key, value: value2 };
     }
 
@@ -28,7 +29,7 @@ export const createAst = (first, second) => {
       };
     }
 
-    if (_.has(second, key) && _.has(first, key) && value2 !== value1) {
+    if (value2 !== value1) {
       return {
         type: NODE_TYPES.changed,
         key,
@@ -38,7 +39,5 @@ export const createAst = (first, second) => {
     }
 
     return { type: NODE_TYPES.notChanged, key, value: value1 };
-  };
-
-  return keys.map(func);
+  });
 };
