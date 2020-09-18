@@ -30,10 +30,10 @@ const renderDiff = (diff, depth = 1) => {
   const indent = makeIndent(tabSize * depth);
   const halfIndent = tab.repeat(tabSize * depth - tabSize / 2);
 
-  const mapping = {
+  const buildStrByType = {
     [NODE_TYPES.added]: ({ key, value }) => `${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
     [NODE_TYPES.changed]: (data) => (
-      [mapping[NODE_TYPES.removed](data), mapping[NODE_TYPES.added](data)]
+      [buildStrByType[NODE_TYPES.removed](data), buildStrByType[NODE_TYPES.added](data)]
     ),
     [NODE_TYPES.nested]: ({ key, children }) => `${indent}${key}: {\n${renderDiff(children, depth + 1)}\n${indent}}`,
     [NODE_TYPES.removed]: ({ key, removedValue }) => `${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
@@ -41,7 +41,7 @@ const renderDiff = (diff, depth = 1) => {
   };
 
   return _.sortBy(diff, ['key'])
-    .flatMap(({ type, ...data }) => mapping[type](data))
+    .flatMap(({ type, ...data }) => buildStrByType[type](data))
     .join('\n');
 };
 
