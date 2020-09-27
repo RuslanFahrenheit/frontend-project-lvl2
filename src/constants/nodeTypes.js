@@ -3,5 +3,5 @@ export const NODE_TYPES = {
   changed: 'changed',
   nested: 'nested',
   removed: 'removed',
-  notChanged: 'notChanged',
+  unchanged: 'unchanged',
 };

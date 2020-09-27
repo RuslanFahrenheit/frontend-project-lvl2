@@ -1,32 +1,32 @@
 import _ from 'lodash';
 import { NODE_TYPES } from '../constants/nodeTypes.js';
 
-const getPath = (acc, key) => [acc, key].filter((item) => item !== '').join('.');
-const convert = (value) => {
-  if (typeof value === 'string') {
-    return `'${value}'`;
+const getPropertyName = (acc, key) => [...acc, key].join('.');
+const stringify = (value) => {
+  switch (typeof value) {
+    case 'string':
+      return `'${value}'`;
+    case 'object':
+      return '[complex value]';
+    default:
+      return value;
   }
-
-  if (_.isPlainObject(value)) {
-    return '[complex value]';
-  }
-
-  return value;
 };
 
-const buildStrByType = {
-  [NODE_TYPES.added]: ({ key, value }, path) => `Property '${getPath(path, key)}' was added with value: ${convert(value)}`,
-  [NODE_TYPES.changed]: ({ key, value, removedValue }, path) => (
-    `Property '${getPath(path, key)}' was updated. From ${convert(removedValue)} to ${convert(value)}`
-  ),
-  [NODE_TYPES.nested]: ({ key, children }, path, renderPlainDiff) => (
-    renderPlainDiff(children, getPath(path, key))
-  ),
-  [NODE_TYPES.removed]: ({ key }, path) => `Property '${getPath(path, key)}' was removed`,
-  [NODE_TYPES.notChanged]: () => '',
+const mapping = {
+  [NODE_TYPES.added]: ({ key, value }, path) => `Property '${getPropertyName(path, key)}' was added with value: ${stringify(value)}`,
+  [NODE_TYPES.changed]: ({ key, value, removedValue }, path) => {
+    const name = getPropertyName(path, key);
+    return `Property '${name}' was updated. From ${stringify(removedValue)} to ${stringify(value)}`;
+  },
+  [NODE_TYPES.nested]: ({ key, children }, path, iter) => iter(children, [...path, key]),
+  [NODE_TYPES.removed]: ({ key }, path) => `Property '${getPropertyName(path, key)}' was removed`,
+  [NODE_TYPES.unchanged]: () => [],
 };
 
-export const renderPlainDiff = (diff, path = '') => _.sortBy(diff, ['key'])
-  .flatMap(({ type, ...data }) => buildStrByType[type](data, path, renderPlainDiff))
-  .filter((item) => item !== '')
-  .join('\n');
+export const renderPlainDiff = (diff) => {
+  const iter = (nodes, path) => nodes
+    .flatMap((node) => mapping[node.type](node, path, iter));
+
+  return iter(_.flatten(diff), []).join('\n');
+};

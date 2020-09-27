@@ -1,23 +1,24 @@
 import _ from 'lodash';
 import { NODE_TYPES } from './constants/nodeTypes.js';
 
-export const createAst = (first, second) => {
-  const keys = _.union(Object.keys(first), Object.keys(second)).sort();
+export const createAst = (data1, data2) => {
+  const keys = _.union(Object.keys(data1), Object.keys(data2));
+  const sortedKeys = _.sortBy(keys);
 
-  return keys.map((key) => {
-    const value1 = first[key];
-    const value2 = second[key];
+  return sortedKeys.map((key) => {
+    const value1 = data1[key];
+    const value2 = data2[key];
 
-    if (!_.has(second, key)) {
+    if (!_.has(data1, key)) {
+      return { type: NODE_TYPES.added, key, value: value2 };
+    }
+
+    if (!_.has(data2, key)) {
       return {
         type: NODE_TYPES.removed,
         key,
         removedValue: value1,
       };
-    }
-
-    if (!_.has(first, key)) {
-      return { type: NODE_TYPES.added, key, value: value2 };
     }
 
     if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
@@ -37,6 +38,6 @@ export const createAst = (first, second) => {
       };
     }
 
-    return { type: NODE_TYPES.notChanged, key, value: value1 };
+    return { type: NODE_TYPES.unchanged, key, value: value1 };
   });
 };
