@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { NODE_TYPES } from '../constants/nodeTypes.js';
 
 const getPropertyName = (acc, key) => [...acc, key].join('.');
@@ -28,5 +27,5 @@ export const renderPlainDiff = (diff) => {
   const iter = (nodes, path) => nodes
     .flatMap((node) => mapping[node.type](node, path, iter));
 
-  return iter(_.flatten(diff), []).join('\n');
+  return iter(diff, []).join('\n');
 };
