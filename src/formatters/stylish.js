@@ -4,25 +4,21 @@ import { NODE_TYPES } from '../constants/nodeTypes.js';
 const tabSize = 4;
 const makeIndent = (depth, tab = ' ') => tab.repeat(depth);
 
-const stringify = (item, depth = 0) => {
-  const iter = (node, currentDepth) => {
-    if (!_.isPlainObject(node)) {
-      return node;
-    }
+const stringify = (node, depth) => {
+  if (!_.isPlainObject(node)) {
+    return node;
+  }
 
-    const indent = makeIndent(tabSize * currentDepth);
-    const unindent = makeIndent(tabSize * currentDepth - tabSize);
+  const indent = makeIndent(tabSize * depth);
+  const unindent = makeIndent(tabSize * depth - tabSize);
 
-    const result = Object.entries(node).flatMap(
-      ([key, value]) => (
-        `\n${indent}${key}: ${iter(value, currentDepth + 1)}`
-      ),
-    ).join('');
+  const result = Object.entries(node).flatMap(
+    ([key, value]) => (
+      `\n${indent}${key}: ${stringify(value, depth + 1)}`
+    ),
+  ).join('');
 
-    return `{${result}\n${unindent}}`;
-  };
-
-  return iter(item, depth);
+  return `{${result}\n${unindent}}`;
 };
 
 const renderDiff = (diff, depth = 1) => {
