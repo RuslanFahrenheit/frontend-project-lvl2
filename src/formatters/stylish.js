@@ -1,47 +1,41 @@
 import _ from 'lodash';
 import { NODE_TYPES } from '../constants/nodeTypes.js';
 
-const tab = ' ';
 const tabSize = 4;
-const makeIndent = (depth) => tab.repeat(depth);
+const makeIndent = (depth, tab = ' ') => tab.repeat(depth);
 
-const buildDiffItem = (item, depth = 0) => {
-  const iter = (node, currentDepth) => {
-    if (!_.isPlainObject(node)) {
-      return node;
-    }
+const stringify = (node, depth) => {
+  if (!_.isPlainObject(node)) {
+    return node;
+  }
 
-    const indent = makeIndent(tabSize * currentDepth);
-    const unindent = tab.repeat(tabSize * currentDepth - tabSize);
+  const indent = makeIndent(tabSize * depth);
+  const unindent = makeIndent(tabSize * depth - tabSize);
 
-    const result = Object.entries(node).flatMap(
-      ([key, value]) => (
-        `\n${indent}${key}: ${iter(value, currentDepth + 1)}`
-      ),
-    ).join('');
+  const result = Object.entries(node).flatMap(
+    ([key, value]) => (
+      `\n${indent}${key}: ${stringify(value, depth + 1)}`
+    ),
+  ).join('');
 
-    return `{${result}\n${unindent}}`;
-  };
-
-  return iter(item, depth);
+  return `{${result}\n${unindent}}`;
 };
 
 const renderDiff = (diff, depth = 1) => {
   const indent = makeIndent(tabSize * depth);
-  const halfIndent = tab.repeat(tabSize * depth - tabSize / 2);
+  const halfIndent = makeIndent(tabSize * depth - tabSize / 2);
 
-  const buildStrByType = {
-    [NODE_TYPES.added]: ({ key, value }) => `${halfIndent}+ ${key}: ${buildDiffItem(value, depth + 1)}`,
+  const mapping = {
+    [NODE_TYPES.added]: ({ key, value }) => `${halfIndent}+ ${key}: ${stringify(value, depth + 1)}`,
     [NODE_TYPES.changed]: (data) => (
-      [buildStrByType[NODE_TYPES.removed](data), buildStrByType[NODE_TYPES.added](data)]
+      [mapping[NODE_TYPES.removed](data), mapping[NODE_TYPES.added](data)]
     ),
     [NODE_TYPES.nested]: ({ key, children }) => `${indent}${key}: {\n${renderDiff(children, depth + 1)}\n${indent}}`,
-    [NODE_TYPES.removed]: ({ key, removedValue }) => `${halfIndent}- ${key}: ${buildDiffItem(removedValue, depth + 1)}`,
-    [NODE_TYPES.notChanged]: ({ key, value }) => `${indent}${key}: ${buildDiffItem(value, depth + 1)}`,
+    [NODE_TYPES.removed]: ({ key, removedValue }) => `${halfIndent}- ${key}: ${stringify(removedValue, depth + 1)}`,
+    [NODE_TYPES.unchanged]: ({ key, value }) => `${indent}${key}: ${stringify(value, depth + 1)}`,
   };
 
-  return _.sortBy(diff, ['key'])
-    .flatMap(({ type, ...data }) => buildStrByType[type](data))
+  return diff.flatMap(({ type, ...data }) => mapping[type](data))
     .join('\n');
 };
 

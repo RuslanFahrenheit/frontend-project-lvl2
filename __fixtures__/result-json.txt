@@ -9,7 +9,7 @@
         "value": false
       },
       {
-        "type": "notChanged",
+        "type": "unchanged",
         "key": "setting1",
         "value": "Value 1"
       },
@@ -55,7 +55,7 @@
             ]
           },
           {
-            "type": "notChanged",
+            "type": "unchanged",
             "key": "key",
             "value": "value"
           },
@@ -79,7 +79,7 @@
         "value": "bars"
       },
       {
-        "type": "notChanged",
+        "type": "unchanged",
         "key": "foo",
         "value": "bar"
       },
