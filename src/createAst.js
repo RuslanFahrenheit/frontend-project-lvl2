@@ -26,7 +26,7 @@ export const createAst = (data1, data2) => {
       };
     }
 
-    if (data2[key] !== data1[key]) {
+    if (!_.isEqual(data2[key], data1[key])) {
       return {
         type: NODE_TYPES.changed,
         key,
